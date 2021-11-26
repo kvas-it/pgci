@@ -20,15 +20,27 @@ jobs:
           - 5432:5432
 
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
+    - name: Check out repository code
+      uses: actions/checkout@v2
 
-      - name: Install psql
-        run: |
-          sudo apt update
-          sudo apt install postgresql-client
+    - name: Install psql
+      run: |
+        sudo apt update
+        sudo apt install postgresql-client
 
-      - name: Connect to PostgreSQL
-        run: |
-          psql -c 'create database one;' postgresql://postgres:postgres@localhost:5432/postgres 
-          psql -c 'create database two with template one;' postgresql://postgres:postgres@localhost:5432/postgres
+    - name: Install python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.9
+
+    - name: Install python PostgreSQL library
+      run: pip install psycopg2
+
+    - name: Do some testing
+      run: |
+        psql -c 'create database one;' ${PG_URL}/postgres 
+        python write.py ${PG_URL}/one
+        psql -c 'create database two with template one;' ${PG_URL}/postgres
+        python read.py ${PG_URL}/two
+      env:
+        PG_URL: postgresql://postgres:postgres@localhost:5432
