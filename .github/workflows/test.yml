@@ -3,9 +3,9 @@ name: Postgres test
 on: push
 
 jobs:
-  container-job:
+  container-postgres-test:
     runs-on: ubuntu-latest
-    container: node:10.18-jessie
+    container: ubuntu-latest
 
     services:
       postgres:
