@@ -16,6 +16,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
       - name: Check out repository code
@@ -23,10 +25,10 @@ jobs:
 
       - name: Install psql
         run: |
-            sudo apt update
-            sudo apt install postgresql-client
+          sudo apt update
+          sudo apt install postgresql-client
 
       - name: Connect to PostgreSQL
         run: |
-            psql -c 'create database one;' postgresql://postgres:postgres@postgres:5432/postgres 
-            psql -c 'create database two with template one;' postgresql://postgres:postgres@postgres:5432/postgres
+          psql -c 'create database one;' postgresql://postgres:postgres@localhost:5432/postgres 
+          psql -c 'create database two with template one;' postgresql://postgres:postgres@localhost:5432/postgres
