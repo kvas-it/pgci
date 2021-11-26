@@ -23,7 +23,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install psql
-        run: apt-get install -y postgresql-client
+        run: |
+            apt update
+            apt install postgresql-client
 
       - name: Connect to PostgreSQL
         run: |
