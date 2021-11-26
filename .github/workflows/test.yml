@@ -23,11 +23,6 @@ jobs:
     - name: Check out repository code
       uses: actions/checkout@v2
 
-    - name: Install psql
-      run: |
-        sudo apt update
-        sudo apt install postgresql-client
-
     - name: Install python
       uses: actions/setup-python@v1
       with:
@@ -38,9 +33,9 @@ jobs:
 
     - name: Do some testing
       run: |
-        psql -c 'create database one;' ${PG_URL}/postgres 
+        python create.py ${PG_URL}/postgres one
         python write.py ${PG_URL}/one
-        psql -c 'create database two with template one;' ${PG_URL}/postgres
+        python create.py ${PG_URL}/postgres two one
         python read.py ${PG_URL}/two
       env:
         PG_URL: postgresql://postgres:postgres@localhost:5432
